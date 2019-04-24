@@ -1,0 +1,34 @@
+name: get_system_info_rest
+label: Get PAN-OS System Information
+
+description: |
+  This skillet demonstrates a simple REST api call to a PAN-OS NGFW to gather it's system information
+
+type: rest
+
+extends:
+
+labels:
+  collection: Rest Skillets
+
+variables:
+  - name: TARGET_IP
+    description: Host
+    default: 127.0.0.1
+    type_hint: ip_address
+  - name: api_key
+    description: API Key
+    default: abc123
+    type_hint: text
+
+snippets:
+  - name: system_info
+    path: https://{{ TARGET_IP }}/api/?type=op&cmd=<show><system><info></info></system></show>&key={{ api_key }}
+    output_type: xml
+    outputs:
+      - name: hostname
+        capture_pattern: result/system/hostname
+      - name: uptime
+        capture_pattern: result/system/uptime
+      - name: sw_version
+        capture_pattern: result/system/sw-version
